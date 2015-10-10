@@ -22,6 +22,10 @@ public class PlayerController : MonoBehaviour {
 
 	private bool dead;
 
+	void Start() {
+		facingRight = transform.localScale.x > 0;
+	}
+
 	void OnDead() {
 		sendStateToAnimators ("dead", true);
 		GetComponent<Rigidbody2D> ().velocity = new Vector2 ();
