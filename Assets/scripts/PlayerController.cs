@@ -38,13 +38,19 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+	void sendIntToAnimators(string state, int value) {
+		foreach (GameObject animator in animators) {
+			animator.GetComponent<Animator>().SetInteger(state, value);
+		}
+	}
+
 	void Update() {
 		if (dead) {
 			return;
 		}
 
 		// If the jump button is pressed and the player is grounded then the player should jump.
-		if (Input.GetButtonDown ("Jump")) {
+		if (Input.GetKeyDown (KeyCode.W)) {
 			jump = true;
 		}
 
@@ -59,7 +65,10 @@ public class PlayerController : MonoBehaviour {
 			sendStateToAnimators ("inair", true);
 		} else {
 			sendStateToAnimators ("inair", false);
-		}	
+		}
+
+		sendIntToAnimators ("ySpeed", Mathf.RoundToInt(GetComponent<Rigidbody2D> ().velocity.y));
+		sendIntToAnimators ("xSpeed", Mathf.RoundToInt(GetComponent<Rigidbody2D> ().velocity.x));
 	}
 
 	void FixedUpdate () {
