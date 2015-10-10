@@ -8,9 +8,6 @@ public class CameraController : MonoBehaviour {
 	private Vector3 velocity = Vector3.zero;
 	private Camera camera;
 
-
-
-
 	public float mapX = 100f;
 	public float mapY = 100f;
 	
@@ -26,16 +23,11 @@ public class CameraController : MonoBehaviour {
 		float vertExtent = camera.orthographicSize;    
 		float horzExtent = vertExtent * Screen.width / Screen.height;
 
-		Debug.Log (horzExtent);
-
 		// Calculations assume map is position at the origin
 		minX = horzExtent;
 		maxX = mapX - horzExtent;
 		minY = mapY + vertExtent;
 		maxY = vertExtent;
-
-
-		Debug.Log (maxX);
 	}
 
 	void LateUpdate() {
@@ -44,6 +36,15 @@ public class CameraController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate  () {
+		float vertExtent = camera.orthographicSize;    
+		float horzExtent = vertExtent * Screen.width / Screen.height;
+		
+		// Calculations assume map is position at the origin
+		minX = horzExtent;
+		maxX = mapX - horzExtent;
+		minY = mapY + vertExtent;
+		maxY = vertExtent;
+
 		if (player) {
 			Vector3 point = camera.WorldToViewportPoint(player.transform.position);
 			Vector3 delta = player.transform.position - camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z)); //(new Vector3(0.5, 0.5, point.z));

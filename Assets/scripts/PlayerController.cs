@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour {
 	public bool facingRight = true;			// For determining which way the player is currently facing.
 	[HideInInspector]
 	public bool jump = false;				// Condition for whether the player should jump.
+	[HideInInspector]
 	public bool canJump = false;
 
 	public bool attack = false;	
@@ -17,16 +18,20 @@ public class PlayerController : MonoBehaviour {
 
 	public GameObject checkobject;
 
-	public GameObject arm;
-	public GameObject body;
+	public GameObject[] animators;
 
 	private bool dead;
 
 	void OnDead() {
-		body.GetComponent<Animator>().SetBool("dead", true);
-		arm.GetComponent<Animator>().SetBool("dead", true);
+		sendStateToAnimators ("dead", true);
 		GetComponent<Rigidbody2D> ().velocity = new Vector2 ();
 		dead = true;
+	}
+
+	void sendStateToAnimators(string state, bool value) {
+		foreach (GameObject animator in animators) {
+			animator.GetComponent<Animator>().SetBool(state, value);
+		}
 	}
 
 	void Update() {
@@ -47,19 +52,12 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		if (!canJump) {
-			body.GetComponent<Animator> ().SetBool ("inair", true);
+			sendStateToAnimators ("inair", true);
 		} else {
-			body.GetComponent<Animator> ().SetBool ("inair", false);
-		}
-
-		if (Input.GetKeyDown (KeyCode.D)) {
-			arm.GetComponent<Animator> ().SetBool ("attack", true);
-		}
-		
-		if (Input.GetKeyUp (KeyCode.D)) {
-			arm.GetComponent<Animator> ().SetBool ("attack", false);
+			sendStateToAnimators ("inair", false);
 		}	
 	}
+
 	void FixedUpdate () {
 		if (dead) {
 			return;
@@ -70,7 +68,7 @@ public class PlayerController : MonoBehaviour {
 
 		GetComponent<Rigidbody2D> ().velocity = new Vector2(5 * h, GetComponent<Rigidbody2D> ().velocity.y);
 
-		body.GetComponent<Animator> ().SetBool ("running", h != 0);
+		sendStateToAnimators ("running", h != 0);
 
 		if (h > 0 && !facingRight) {
 			Flip ();
